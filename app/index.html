@@ -1,0 +1,165 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="The World Series, powered by Firebase!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Polymer Starter Kit"/>
+    <title>World Series Tracker!</title>
+    <meta name="theme-color" content="#2E3AA1">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild-->
+
+    <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <!-- endbuild -->
+
+    <!-- will be replaced with elements/elements.vulcanized.html -->
+    <link rel="import" href="elements/elements.html">
+    <!-- endreplace-->
+
+    <!-- For shared styles, shared-styles.html import in elements.html -->
+    <style is="custom-style" include="shared-styles"></style>
+  </head>
+
+  <body unresolved class="fullbleed layout vertical">
+    <span id="browser-sync-binding"></span>
+    <template is="dom-bind" id="app">
+      <paper-drawer-panel id="paperDrawerPanel">
+        <paper-scroll-header-panel drawer fixed>
+          <paper-toolbar id="drawerToolbar">
+            <span class="paper-font-title">Menu</span>
+          </paper-toolbar>
+
+          <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
+            <a data-route="play-by-play" href="playByPlay" on-tap="onDataRouteClick">
+              <iron-icon icon="track-changes"></iron-icon>
+              <span>Live Play-by-Play</span>
+            </a>
+
+            <a data-route="submit-play" href="submitPlay" on-tap="onDataRouteClick">
+              <iron-icon icon="add"></iron-icon>
+              <span>Submit Play</span>
+            </a>
+
+            <a data-route="get-code" href="getCode" on-tap="onDataRouteClick">
+              <iron-icon icon="code"></iron-icon>
+              <span>Get the Code</span>
+            </a>
+          </paper-menu>
+        </paper-scroll-header-panel>
+
+        <paper-scroll-header-panel main id="headerPanelMain" condenses keep-condensed-header>
+          <paper-toolbar id="mainToolbar" class="tall">
+            <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+            <div class="middle middle-container center horizontal layout">
+              <div class="app-name">World Series Tracker</div>
+            </div>
+            <div class="bottom bottom-container center horizontal layout">
+              <div class="bottom-title paper-font-subhead">Like fantasy baseball, but with Firebase.</div>
+            </div>
+          </paper-toolbar>
+
+          <div class="content">
+            <iron-pages attr-for-selected="data-route" selected="{{route}}">
+              <section data-route="play-by-play">
+                <paper-material elevation="1">
+                  <h2 class="page-title">Play-by-Play</h2>
+
+                  <firebase-collection id="firebase-plays"
+                                       location="https://playdemo.firebaseio.com/plays"
+                                       data="{{plays}}">
+                  </firebase-collection>
+
+                  <template is="dom-repeat" items="[[plays]]" as="play">
+                    <div class="layout vertical">
+                      <paper-icon-item>
+                        <iron-icon src="[[play.icon]]" item-icon></iron-icon>
+                        <span>[[play.play]]</span>
+                      </paper-icon-item>
+                    </div>
+                  </template>
+                </paper-material>
+              </section>
+
+              <section data-route="submit-play">
+                <firebase-collection location="https://playdemo.firebaseio.com/config/teams"
+                                     data="{{teams}}">
+                </firebase-collection>
+                <firebase-collection location="https://playdemo.firebaseio.com/config/actions"
+                                     data="{{actions}}">
+                </firebase-collection>
+
+                <template is="dom-repeat" items="[[teams]]" as="team">
+                  <paper-material elevation="1" class="layout horizontal">
+                    <iron-image src="[[team.icon]]"
+                                height="150"
+                                width="150"
+                                sizing="contain">
+                    </iron-image>
+
+                    <div class="flex layout vertical">
+                      <paper-dropdown-menu label="[[team.name]] Player" selected-item-label="{{selectedPlayer}}">
+                        <paper-menu class="dropdown-content">
+                          <template is="dom-repeat" items="[[team.players]]" as="player">
+                            <paper-item>[[player]]</paper-item>
+                          </template>
+                        </paper-menu>
+                      </paper-dropdown-menu>
+
+                      <paper-dropdown-menu label="Outcome" selected-item-label="{{selectedOutcome}}">
+                        <paper-menu class="dropdown-content">
+                          <template is="dom-repeat" items="[[actions]]" as="action">
+                            <paper-item>[[action.value]]</paper-item>
+                          </template>
+                        </paper-menu>
+                      </paper-dropdown-menu>
+
+                      <paper-button class="self-end" on-tap="submitPlay">Submit Play</paper-button>
+                    </div>
+                  </paper-material>
+                </template>
+              </section>
+
+              <section data-route="get-code">
+                <paper-material elevation="1">
+                  <h2 class="page-title">Get the Code</h2>
+                  <p>
+                    The code is available at
+                    <a href="https://github.com/jeffposnick/polymer-starter-kit/tree/firebase-demo">https://github.com/jeffposnick/polymer-starter-kit/tree/firebase-demo</a>
+                  </p>
+                  <p>Make sure you switch to the <code>firebase-demo</code> branch!</p>
+                  <p>
+                    A downloadable archive is at
+                    <a href="https://github.com/jeffposnick/polymer-starter-kit/archive/firebase-demo.zip">https://github.com/jeffposnick/polymer-starter-kit/archive/firebase-demo.zip</a>
+                  </p>
+                </paper-material>
+              </section>
+            </iron-pages>
+          </div>
+        </paper-scroll-header-panel>
+      </paper-drawer-panel>
+
+      <paper-toast id="toast">
+        <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
+      </paper-toast>
+    </template>
+
+    <!-- build:js scripts/app.js -->
+    <script src="scripts/app.js"></script>
+    <!-- endbuild-->
+  </body>
+</html>
