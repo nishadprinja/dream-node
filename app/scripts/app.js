@@ -16,12 +16,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   var app = document.querySelector('#app');
 
   app.submitPlay = function(event) {
-    if (event.model.selectedPlayer && event.model.selectedOutcome) {
+      alert('Got here!')
       Polymer.dom(document).querySelector('#firebase-plays').add({
-        icon: event.model.team.icon,
-        play: event.model.selectedPlayer + ' ' + event.model.selectedOutcome + '.'
+        currentPosition: $('#current-position').val(),
+        desiredOutcome: $('#desired-outcome').val()
       });
-    }
   };
 
   // Main area's paper-scroll-header-panel custom condensing transformation of

@@ -12,17 +12,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="description" content="The World Series, powered by Firebase!">
+    <meta name="description" content="Dream-Node, powered by Firebase!">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Polymer Starter Kit"/>
-    <title>World Series Tracker!</title>
+    <title>Dream-Node!</title>
     <meta name="theme-color" content="#2E3AA1">
     <link rel="manifest" href="manifest.json">
 
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild-->
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.js"></script>
+    
     <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <!-- endbuild -->
@@ -33,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- For shared styles, shared-styles.html import in elements.html -->
     <style is="custom-style" include="shared-styles"></style>
-  </head>
+    </head>
 
   <body unresolved class="fullbleed layout vertical">
     <span id="browser-sync-binding"></span>
@@ -47,12 +49,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
             <a data-route="play-by-play" href="playByPlay" on-tap="onDataRouteClick">
               <iron-icon icon="track-changes"></iron-icon>
-              <span>Live Play-by-Play</span>
+              <span>Register of Nodes</span>
             </a>
 
             <a data-route="submit-play" href="submitPlay" on-tap="onDataRouteClick">
               <iron-icon icon="add"></iron-icon>
-              <span>Submit Play</span>
+              <span>Node Mapper</span>
             </a>
 
           </paper-menu>
@@ -62,35 +64,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-toolbar id="mainToolbar" class="tall">
             <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
             <div class="middle middle-container center horizontal layout">
-              <div class="app-name">World Series Tracker</div>
+              <div class="app-name">Dream-Node</div>
             </div>
             <div class="bottom bottom-container center horizontal layout">
-              <div class="bottom-title paper-font-subhead">Like fantasy baseball, but with Firebase.</div>
+              <div class="bottom-title paper-font-subhead">Career node profiling with Firebase.</div>
             </div>
           </paper-toolbar>
 
           <div class="content">
-            <iron-pages attr-for-selected="data-route" selected="{{route}}">
-              <section data-route="play-by-play">
-                <paper-material elevation="1">
-                  <h2 class="page-title">Play-by-Play</h2>
-
-                  <firebase-collection id="firebase-plays"
-                                       location="https://playdemo.firebaseio.com/plays"
-                                       data="{{plays}}">
-                  </firebase-collection>
-
-                  <template is="dom-repeat" items="[[plays]]" as="play">
-                    <div class="layout vertical">
-                      <paper-icon-item>
-                        <iron-icon src="[[play.icon]]" item-icon></iron-icon>
-                        <span>[[play.play]]</span>
-                      </paper-icon-item>
-                    </div>
-                  </template>
-                </paper-material>
-              </section>
-
+            
               <section data-route="submit-play">
                 <firebase-collection location="https://playdemo.firebaseio.com/config/teams"
                                      data="{{teams}}">
@@ -98,42 +80,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <firebase-collection location="https://playdemo.firebaseio.com/config/actions"
                                      data="{{actions}}">
                 </firebase-collection>
+                <firebase-collection id="firebase-plays"
+                                     location="https://playdemo.firebaseio.com/plays"
+                                     data="{{plays}}">
+                </firebase-collection>
 
-                <template is="dom-repeat" items="[[teams]]" as="team">
-                  <paper-material elevation="1" class="layout horizontal">
+  
+<!--                   <paper-material elevation="1" class="layout horizontal">
                     <iron-image src="[[team.icon]]"
                                 height="150"
                                 width="150"
                                 sizing="contain">
-                    </iron-image>
+                    </iron-image> -->
 
-                    <div class="flex layout vertical">
-                      <paper-dropdown-menu label="[[team.name]] Player" selected-item-label="{{selectedPlayer}}">
-                        <paper-menu class="dropdown-content">
-                          <template is="dom-repeat" items="[[team.players]]" as="player">
-                            <paper-item>[[player]]</paper-item>
-                          </template>
-                        </paper-menu>
-                      </paper-dropdown-menu>
-
-                      <paper-dropdown-menu label="Outcome" selected-item-label="{{selectedOutcome}}">
-                        <paper-menu class="dropdown-content">
-                          <template is="dom-repeat" items="[[actions]]" as="action">
-                            <paper-item>[[action.value]]</paper-item>
-                          </template>
-                        </paper-menu>
-                      </paper-dropdown-menu>
-
-                      <paper-button class="self-end" on-tap="submitPlay">Submit Play</paper-button>
+                    <div>
+                      <paper-input id="current-position" label="Current Position">
+                      </paper-input>
+                      <paper-input id="desired-outcome" label="Desired Outcome">
+                      </paper-input>
+                      <paper-button class="self-end" on-tap="submitPlay">Submit</paper-button>
                     </div>
                   </paper-material>
                 </template>
+
+<!--                 <iron-pages attr-for-selected="data-route" selected="{{route}}">
+                    <paper-material elevation="1"> -->
+
+
+                      <template is="dom-repeat" items="[[plays]]" as="play">
+                        <div class="layout vertical">
+                            <span>[[play.currentPosition]]</span>
+                            <span>[[play.desiredOutcome]]</span>
+                        </div>
+                      </template>
+<!--                     </paper-material> -->
               </section>
 
-            </iron-pages>
+<!--             </iron-pages>
           </div>
         </paper-scroll-header-panel>
-      </paper-drawer-panel>
+      </paper-drawer-panel> -->
 
       <paper-toast id="toast">
         <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
